@@ -1,20 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(ParMETIS)
 
-set(GKLIB_PATH METIS/GKlib CACHE PATH "path to GKlib")
-set(METIS_PATH METIS CACHE PATH "path to METIS")
-
-# Symlink ./metis to wherever metis is. This allows files to be
-# included from metis/libmetis/.
-execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${METIS_PATH} metis)
-
-# Search for MPI.
-# GK commented this out as it seems to be creating problems
-# include(FindMPI)
-# if(NOT MPI_FOUND)
-#   message(FATAL_ERROR "mpi is not found")
-# endif()
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_COMPILE_FLAGS}")
+set(GKLIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/metis/GKlib)
+set(METIS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/metis)
+set(SHARED ${BUILD_SHARED_LIBS})
 
 # Prepare libraries.
 if(SHARED)
@@ -33,7 +22,7 @@ include_directories(${GKLIB_PATH})
 include_directories(${METIS_PATH}/include)
 
 # List of directories that cmake will look for CMakeLists.txt
-add_subdirectory(${METIS_PATH}/libmetis ${CMAKE_BINARY_DIR}/libmetis)
+add_subdirectory(metis)
 add_subdirectory(include)
 add_subdirectory(libparmetis)
 add_subdirectory(programs)
