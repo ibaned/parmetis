@@ -250,7 +250,6 @@ real_t WavefrontDiffusion(ctrl_t *ctrl, graph_t *graph, idx_t *home)
   cost          = ctrl->ipc_factor * (real_t)graph->mincut + ctrl->redist_factor * (real_t)totalv;
 
 
-CleanUpAndExit:
   gk_free((void **)&solution, (void **)&perm, (void **)&workspace, (void **)&cand, LTERM);
 
   return cost;

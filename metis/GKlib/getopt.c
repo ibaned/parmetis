@@ -342,9 +342,9 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
   if (gk_optind == 0 || !gk_getopt_initialized) {
     if (gk_optind == 0)
       gk_optind = 1;	/* Don't scan ARGV[0], the program name.  */
-      optstring = gk_getopt_initialize (argc, argv, optstring);
-      gk_getopt_initialized = 1;
-    }
+    optstring = gk_getopt_initialize (argc, argv, optstring);
+    gk_getopt_initialized = 1;
+  }
 
   /* Test whether ARGV[gk_optind] points to a non-option argument.
      Either it does not have option syntax, or there is an environment flag
@@ -364,15 +364,15 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
 
     if (ordering == PERMUTE) {
       /* If we have just processed some options following some non-options,
-	 exchange them so that the options come first.  */
+         exchange them so that the options come first.  */
 
       if (first_nonopt != last_nonopt && last_nonopt != gk_optind)
-	exchange ((char **) argv);
+        exchange ((char **) argv);
       else if (last_nonopt != gk_optind)
-	first_nonopt = gk_optind;
+        first_nonopt = gk_optind;
 
       /* Skip any additional non-options
-	 and extend the range of non-options previously skipped.  */
+         and extend the range of non-options previously skipped.  */
 
       while (gk_optind < argc && NONOPTION_P)
         gk_optind++;
@@ -402,9 +402,9 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
 
     if (gk_optind == argc) {
       /* Set the next-arg-index to point at the non-options
-	 that we previously skipped, so the caller will digest them.  */
+         that we previously skipped, so the caller will digest them.  */
       if (first_nonopt != last_nonopt)
-	gk_optind = first_nonopt;
+        gk_optind = first_nonopt;
       return -1;
     }
 
@@ -413,7 +413,7 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
 
     if (NONOPTION_P) {
       if (ordering == REQUIRE_ORDER)
-	return -1;
+        return -1;
       gk_optarg = argv[gk_optind++];
       return 1;
     }
@@ -455,20 +455,20 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
     for (p = longopts, option_index = 0; p->name; p++, option_index++) {
       if (!strncmp (p->name, nextchar, nameend - nextchar)) {
         if ((unsigned int) (nameend - nextchar) == (unsigned int) strlen (p->name)) {
-	  /* Exact match found.  */
-	  pfound = p;
-	  indfound = option_index;
-	  exact = 1;
-	  break;
-	}
-	else if (pfound == NULL) {
+          /* Exact match found.  */
+          pfound = p;
+          indfound = option_index;
+          exact = 1;
+          break;
+        }
+        else if (pfound == NULL) {
           /* First nonexact match found.  */
-	  pfound = p;
-	  indfound = option_index;
-	}
-	else if (long_only || pfound->has_arg != p->has_arg || pfound->flag != p->flag || pfound->val != p->val)
-	  /* Second or later nonexact match found.  */
-	  ambig = 1;
+          pfound = p;
+          indfound = option_index;
+        }
+        else if (long_only || pfound->has_arg != p->has_arg || pfound->flag != p->flag || pfound->val != p->val)
+          /* Second or later nonexact match found.  */
+          ambig = 1;
       }
     }
 
@@ -486,57 +486,57 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
       option_index = indfound;
       gk_optind++;
       if (*nameend) {
-	/* Don't test has_arg with >, because some C compilers don't allow it to be used on enums.  */
-	if (pfound->has_arg)
-	  gk_optarg = nameend + 1;
-	else {
-	  if (print_errors) {
-	    if (argv[gk_optind - 1][1] == '-')
-	      /* --option */
-	      fprintf(stderr, "%s: option `--%s' doesn't allow an argument\n", argv[0], pfound->name);
-	    else
-	      /* +option or -option */
-	      fprintf(stderr, "%s: option `%c%s' doesn't allow an argument\n", argv[0], argv[gk_optind - 1][0], pfound->name);
-	  }
+        /* Don't test has_arg with >, because some C compilers don't allow it to be used on enums.  */
+        if (pfound->has_arg)
+          gk_optarg = nameend + 1;
+        else {
+          if (print_errors) {
+            if (argv[gk_optind - 1][1] == '-')
+              /* --option */
+              fprintf(stderr, "%s: option `--%s' doesn't allow an argument\n", argv[0], pfound->name);
+            else
+              /* +option or -option */
+              fprintf(stderr, "%s: option `%c%s' doesn't allow an argument\n", argv[0], argv[gk_optind - 1][0], pfound->name);
+          }
 
-	  nextchar += strlen (nextchar);
+          nextchar += strlen (nextchar);
 
-	  gk_optopt = pfound->val;
-	  return '?';
-	}
+          gk_optopt = pfound->val;
+          return '?';
+        }
       }
       else if (pfound->has_arg == 1) {
-	if (gk_optind < argc)
-	  gk_optarg = argv[gk_optind++];
-	else {
-	  if (print_errors)
-	    fprintf(stderr, "%s: option `%s' requires an argument\n", argv[0], argv[gk_optind - 1]);
-	  nextchar += strlen (nextchar);
-	  gk_optopt = pfound->val;
-	  return optstring[0] == ':' ? ':' : '?';
-	}
+        if (gk_optind < argc)
+          gk_optarg = argv[gk_optind++];
+        else {
+          if (print_errors)
+            fprintf(stderr, "%s: option `%s' requires an argument\n", argv[0], argv[gk_optind - 1]);
+          nextchar += strlen (nextchar);
+          gk_optopt = pfound->val;
+          return optstring[0] == ':' ? ':' : '?';
+        }
       }
       nextchar += strlen (nextchar);
       if (longind != NULL)
         *longind = option_index;
       if (pfound->flag) {
-	*(pfound->flag) = pfound->val;
-	return 0;
+        *(pfound->flag) = pfound->val;
+        return 0;
       }
       return pfound->val;
     }
 
     /* Can't find it as a long option.  If this is not getopt_long_only,
        or the option starts with '--' or is not a valid short
-        option, then it's an error. Otherwise interpret it as a short option.  */
+       option, then it's an error. Otherwise interpret it as a short option.  */
     if (!long_only || argv[gk_optind][1] == '-' || strchr(optstring, *nextchar) == NULL) {
       if (print_errors) {
-	if (argv[gk_optind][1] == '-')
-	  /* --option */
-	  fprintf(stderr, "%s: unrecognized option `--%s'\n", argv[0], nextchar);
-	else
-	  /* +option or -option */
-	  fprintf(stderr, "%s: unrecognized option `%c%s'\n", argv[0], argv[gk_optind][0], nextchar);
+        if (argv[gk_optind][1] == '-')
+          /* --option */
+          fprintf(stderr, "%s: unrecognized option `--%s'\n", argv[0], nextchar);
+        else
+          /* +option or -option */
+          fprintf(stderr, "%s: unrecognized option `%c%s'\n", argv[0], argv[gk_optind][0], nextchar);
       }
       nextchar = (char *) "";
       gk_optind++;
@@ -557,10 +557,10 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
     if (temp == NULL || c == ':') {
       if (print_errors) {
         if (posixly_correct)
-	  /* 1003.2 specifies the format of this message.  */
-	  fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
-	else
-	  fprintf(stderr, "%s: invalid option -- %c\n", argv[0], c);
+          /* 1003.2 specifies the format of this message.  */
+          fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
+        else
+          fprintf(stderr, "%s: invalid option -- %c\n", argv[0], c);
       }
       gk_optopt = c;
       return '?';
@@ -578,91 +578,91 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
 
       /* This is an option that requires an argument.  */
       if (*nextchar != '\0') {
-	gk_optarg = nextchar;
-	/* If we end this ARGV-element by taking the rest as an arg,
-	   we must advance to the next element now.  */
-	gk_optind++;
+        gk_optarg = nextchar;
+        /* If we end this ARGV-element by taking the rest as an arg,
+           we must advance to the next element now.  */
+        gk_optind++;
       }
       else if (gk_optind == argc) {
-	if (print_errors) {
-	  /* 1003.2 specifies the format of this message.  */
-	  fprintf(stderr, "%s: option requires an argument -- %c\n", argv[0], c);
-	}
-	gk_optopt = c;
-	if (optstring[0] == ':')
-	  c = ':';
-	else
-	  c = '?';
-	return c;
+        if (print_errors) {
+          /* 1003.2 specifies the format of this message.  */
+          fprintf(stderr, "%s: option requires an argument -- %c\n", argv[0], c);
+        }
+        gk_optopt = c;
+        if (optstring[0] == ':')
+          c = ':';
+        else
+          c = '?';
+        return c;
       }
       else
-	/* We already incremented `gk_optind' once; increment it again when taking next ARGV-elt as argument.  */
-	gk_optarg = argv[gk_optind++];
+        /* We already incremented `gk_optind' once; increment it again when taking next ARGV-elt as argument.  */
+        gk_optarg = argv[gk_optind++];
 
       /* gk_optarg is now the argument, see if it's in the table of longopts.  */
 
       for (nextchar = nameend = gk_optarg; *nameend && *nameend != '='; nameend++)
-	/* Do nothing.  */ ;
+        /* Do nothing.  */ ;
 
       /* Test all long options for either exact match or abbreviated matches.  */
       for (p = longopts, option_index = 0; p->name; p++, option_index++) {
-	if (!strncmp (p->name, nextchar, nameend - nextchar)) {
-	  if ((unsigned int) (nameend - nextchar) == strlen (p->name)) {
-	    /* Exact match found.  */
-	    pfound = p;
-	    indfound = option_index;
-	    exact = 1;
-	    break;
-	  }
-	  else if (pfound == NULL) {
-	    /* First nonexact match found.  */
-	    pfound = p;
-	    indfound = option_index;
-	  }
-	  else
-	    /* Second or later nonexact match found.  */
-	    ambig = 1;
-	}
+        if (!strncmp (p->name, nextchar, nameend - nextchar)) {
+          if ((unsigned int) (nameend - nextchar) == strlen (p->name)) {
+            /* Exact match found.  */
+            pfound = p;
+            indfound = option_index;
+            exact = 1;
+            break;
+          }
+          else if (pfound == NULL) {
+            /* First nonexact match found.  */
+            pfound = p;
+            indfound = option_index;
+          }
+          else
+            /* Second or later nonexact match found.  */
+            ambig = 1;
+        }
       }
       if (ambig && !exact) {
-	if (print_errors)
-	  fprintf(stderr, "%s: option `-W %s' is ambiguous\n", argv[0], argv[gk_optind]);
-	nextchar += strlen (nextchar);
-	gk_optind++;
-	return '?';
+        if (print_errors)
+          fprintf(stderr, "%s: option `-W %s' is ambiguous\n", argv[0], argv[gk_optind]);
+        nextchar += strlen (nextchar);
+        gk_optind++;
+        return '?';
       }
       if (pfound != NULL) {
-	option_index = indfound;
-	if (*nameend) {
-	  /* Don't test has_arg with >, because some C compilers don't allow it to be used on enums.  */
-	  if (pfound->has_arg)
-	    gk_optarg = nameend + 1;
-	  else {
-	    if (print_errors)
-	      fprintf(stderr, "%s: option `-W %s' doesn't allow an argument\n", argv[0], pfound->name);
+        option_index = indfound;
+        if (*nameend) {
+          /* Don't test has_arg with >, because some C compilers don't allow it to be used on enums.  */
+          if (pfound->has_arg)
+            gk_optarg = nameend + 1;
+          else {
+            if (print_errors)
+              fprintf(stderr, "%s: option `-W %s' doesn't allow an argument\n", argv[0], pfound->name);
 
-	    nextchar += strlen (nextchar);
-	    return '?';
-	  }
-	}
-	else if (pfound->has_arg == 1) {
-	  if (gk_optind < argc)
-	    gk_optarg = argv[gk_optind++];
-	  else {
-	    if (print_errors)
-	      fprintf(stderr, "%s: option `%s' requires an argument\n", argv[0], argv[gk_optind - 1]);
-	    nextchar += strlen (nextchar);
-	    return optstring[0] == ':' ? ':' : '?';
-	  }
+            nextchar += strlen (nextchar);
+            return '?';
+          }
         }
-	nextchar += strlen (nextchar);
-	if (longind != NULL)
-	  *longind = option_index;
-	if (pfound->flag) {
-	  *(pfound->flag) = pfound->val;
-	  return 0;
-	}
-	return pfound->val;
+        else if (pfound->has_arg == 1) {
+          if (gk_optind < argc)
+            gk_optarg = argv[gk_optind++];
+          else {
+            if (print_errors)
+              fprintf(stderr, "%s: option `%s' requires an argument\n", argv[0], argv[gk_optind - 1]);
+            nextchar += strlen (nextchar);
+            return optstring[0] == ':' ? ':' : '?';
+          }
+        }
+        nextchar += strlen (nextchar);
+        if (longind != NULL)
+          *longind = option_index;
+        if (pfound->flag) {
+          *(pfound->flag) = pfound->val;
+          return 0;
+        }
+        return pfound->val;
       }
       nextchar = NULL;
       return 'W';	/* Let the application handle it.   */
@@ -670,37 +670,37 @@ static int gk_getopt_internal(int argc, char **argv, char *optstring,
 
     if (temp[1] == ':') {
       if (temp[2] == ':') {
-	/* This is an option that accepts an argument optionally.  */
-	if (*nextchar != '\0') {
-  	  gk_optarg = nextchar;
-	  gk_optind++;
-	}
-	else
-	  gk_optarg = NULL;
-	nextchar = NULL;
+        /* This is an option that accepts an argument optionally.  */
+        if (*nextchar != '\0') {
+          gk_optarg = nextchar;
+          gk_optind++;
+        }
+        else
+          gk_optarg = NULL;
+        nextchar = NULL;
       }
       else {
-	/* This is an option that requires an argument.  */
-	if (*nextchar != '\0') {
-	  gk_optarg = nextchar;
-	  /* If we end this ARGV-element by taking the rest as an arg, we must advance to the next element now.  */
-	  gk_optind++;
-	}
-	else if (gk_optind == argc) {
-	  if (print_errors) {
-	    /* 1003.2 specifies the format of this message.  */
-	    fprintf(stderr, "%s: option requires an argument -- %c\n", argv[0], c);
-	  }
-	  gk_optopt = c;
-	  if (optstring[0] == ':')
-	    c = ':';
-	  else
-	    c = '?';
-	}
-	else
-	  /* We already incremented `gk_optind' once; increment it again when taking next ARGV-elt as argument.  */
-	  gk_optarg = argv[gk_optind++];
-	  nextchar = NULL;
+        /* This is an option that requires an argument.  */
+        if (*nextchar != '\0') {
+          gk_optarg = nextchar;
+          /* If we end this ARGV-element by taking the rest as an arg, we must advance to the next element now.  */
+          gk_optind++;
+        }
+        else if (gk_optind == argc) {
+          if (print_errors) {
+            /* 1003.2 specifies the format of this message.  */
+            fprintf(stderr, "%s: option requires an argument -- %c\n", argv[0], c);
+          }
+          gk_optopt = c;
+          if (optstring[0] == ':')
+            c = ':';
+          else
+            c = '?';
+        }
+        else
+          /* We already incremented `gk_optind' once; increment it again when taking next ARGV-elt as argument.  */
+          gk_optarg = argv[gk_optind++];
+        nextchar = NULL;
       }
     }
     return c;
